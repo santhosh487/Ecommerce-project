@@ -1,0 +1,197 @@
+{% extends 'shop1/layouts/main.html' %} {% load static %} {% block title %}
+Shopkart | {{ product.name }} Details {% endblock title %} {% block content %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+<section class="bg-light py-4 my-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h4 class="mb-3">{{ product.name|upper }} DETAILS</h4>
+        <hr style="border-color: #b8bfc2" />
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item">
+              <a href="{% url 'collection' product.category.name %}"
+                >Collections</a
+              >
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              {{ product.name }}
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    {% include 'shop1/inc/message.html' %}
+
+    <div class="row">
+      <div class="col-md-4 my-3 pic-box">
+        {% if product.trending %}
+        <div class="hot">Hot</div>
+        {% endif %}
+        <img
+          src="{{ product.product_image.url }}"
+          class="img-fluid"
+          alt="{{ product.name }}"
+          style="max-height: 100%; max-width: 100%; object-fit: contain"
+        />
+      </div>
+
+      <div class="col-md-8 my-3">
+        <h5 class="text-success mb-3">{{ product.name|upper }}</h5>
+        <p class="mb-3">{{ product.vendor }}</p>
+        <h4 class="mb-4">{{ product.description }}</h4>
+
+        <h6 class="my-3 text-danger">
+          Current Price: <del>₹{{ product.original_price }}</del>
+        </h6>
+        <h5 class="my-4 text-success">
+          <strong>Offer Price:</strong> ₹{{ product.selling_price }}
+        </h5>
+
+        {% if product.quantity > 0 %}
+        <input type="hidden" value="{{ product.id }}" id="pid" />
+        <input
+          type="hidden"
+          name="csrfmiddlewaretoken"
+          value="{{ csrf_token }}"
+        />
+
+        <div class="input-group mb-3" style="width: 150px">
+          <button class="input-group-text bg-success text-light" id="btnMinus">
+            <i class="fa fa-minus"></i>
+          </button>
+          <input
+            type="text"
+            name="qty"
+            id="txtQty"
+            value="1"
+            class="form-control text-center"
+          />
+          <button class="input-group-text bg-success text-light" id="btnPlus">
+            <i class="fa fa-plus"></i>
+          </button>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary" id="btnCart">
+            <i class="fa fa-shopping-cart"></i> Add to Cart
+          </button>
+          <button type="button" id="btnFav" class="btnFav" style="color: gray">
+            <i class="fa fa-heart"></i>
+          </button>
+        </div>
+        {% else %}
+        <div class="d-flex gap-2">
+          <button class="btn btn-secondary" disabled>
+            <i class="fa fa-shopping-minus"></i> Out of Stock
+          </button>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const btnPlus = document.getElementById("btnPlus");
+    const btnMinus = document.getElementById("btnMinus");
+    const qtyInput = document.getElementById("txtQty");
+    const pid = document.getElementById("pid");
+    const tkn = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+    const btnCart = document.getElementById("btnCart");
+    const btnFav = document.querySelector(".btnFav");
+
+    // Increase quantity
+    if (btnPlus) {
+      btnPlus.addEventListener("click", function () {
+        let qty = parseInt(qtyInput.value, 10);
+        if (!isNaN(qty) && qty < 10) {
+          qtyInput.value = qty + 1;
+        }
+      });
+    }
+
+    // Decrease quantity
+    if (btnMinus) {
+      btnMinus.addEventListener("click", function () {
+        let qty = parseInt(qtyInput.value, 10);
+        if (!isNaN(qty) && qty > 1) {
+          qtyInput.value = qty - 1;
+        }
+      });
+    }
+
+    // Add to cart
+    if (btnCart) {
+      btnCart.addEventListener("click", function () {
+        const qty = parseInt(qtyInput.value, 10);
+
+        if (!isNaN(qty) && qty > 0) {
+          axios
+            .post(
+              "/addtocart/",
+              {
+                product_id: pid.value,
+                product_qty: qty,
+              },
+              {
+                headers: {
+                  "X-CSRFToken": tkn,
+                  "X-Requested-With": "XMLHttpRequest",
+                  "Content-Type": "application/json",
+                },
+              }
+            )
+            .then((response) => {
+              alert(response.data.status);
+            })
+            .catch((error) => {
+              console.error("Error adding to cart:", error);
+              alert("Something went wrong while adding to cart.");
+            });
+        } else {
+          alert("Please enter a valid quantity.");
+        }
+      });
+    }
+
+    // Add to favourite
+    if (btnFav) {
+      btnFav.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        axios
+          .post(
+            "/add-to-favourite/",
+            {
+              product_id: pid.value,
+            },
+
+            {
+              headers: {
+                "X-CSRFToken": tkn,
+                "X-Requested-With": "XMLHttpRequest",
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then((response) => {
+            alert(response.data.status);
+            btnFav.style.color = "red";
+          })
+          .catch((error) => {
+            console.error("Error adding to favourite:", error);
+            alert("Something went wrong while adding to favourite.");
+          });
+      });
+    }
+  });
+</script>
+
+{% endblock content %}

@@ -1,0 +1,42 @@
+{% extends 'shop1/layouts/main.html' %}
+{% load static %}
+{% block title %}Shopkart | Online Shopping{% endblock title %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<section class="bg-light py-4 my-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h4 class="mb-3">{{category_name}} Products</h4>
+        <hr style="border-color: #b8bfc2" />
+        {% include 'shop1/inc/message.html' %}
+      </div>
+
+      {% for item in products %}
+      <div class="col-md-4 col-lg-3 d-flex align-items-stretch">
+        <a href="{% url 'product_details' category_name item.name %}" style="text-decoration: none; width: 100%;">
+          <div class="card my-3 h-100">
+            <div style="height: 250px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+              {% if item.product_image %}
+              <img src="{{ item.product_image.url }}" alt="{{ item.name }}" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+              {% else %}
+              <img src="/static/images/default.png" alt="No Image" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+              {% endif %}
+            </div>
+            <div class="card-body">
+              <h5 class="card-title text-primary text-center">{{ item.name }}</h5>
+              <p class="card-text text-center">
+                <span class="text-muted text-decoration-line-through old_price">Rs.{{ item.original_price | stringformat:'d'}} </span><br>
+                <span class="fw-bold new_price">Rs.{{ item.selling_price | stringformat:'d'}}</span>
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+{% endblock content %}

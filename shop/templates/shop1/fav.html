@@ -1,0 +1,48 @@
+{% extends 'shop1/layouts/main.html' %}
+
+{% block title %}
+  Favourites | Shopkart
+{% endblock title %}
+
+{% block content %}
+<section class="bg-light py-4 my-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h4 class="mb-3">Your Favourites</h4>
+        <hr style="border-color: #b8bfc2" />
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in favourites %}
+            <tr>
+              <td>
+                <img src="{{ item.product.product_image.url }}" height="75px" alt="{{ item.product.name }}">
+              </td>
+              <td>{{ item.product.name }}</td>
+              <td>₹{{ item.product.selling_price|floatformat:2 }}</td>
+              <td>
+                <a href="{% url 'remove_favourite' item.id %}" onclick="return confirm('Are you sure to remove this item?')" class="btn btn-danger btn-sm">
+                  <i class="fa fa-trash"></i> Remove
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="4">No favourites yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

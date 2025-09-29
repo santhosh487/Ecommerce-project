@@ -1,0 +1,103 @@
+*
+/* Category card image */
+.category-img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Product grid images */
+.card-img-top {
+  width: 100%;
+  height: 250px; /* Standard height for product images */
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Product text formatting */
+.old_price {
+  font-weight: bold;
+  color: red;
+  text-decoration: line-through;
+}
+
+.new_price {
+  font-weight: bold;
+  background-color: green;
+  color: white;
+  padding: 4px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+}
+
+/* Card layout fix for equal height */
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pic-box {
+  position: relative;
+}
+
+.hot {
+  background-color: orangered;
+  color: white;
+  width: 50px;
+  text-align: center;
+  font-weight: bold;
+  display: inline-block;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  top: 0%;
+  right: 20px;
+  z-index: 10;
+}
+
+.card {
+    border-radius: 10px;
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+.card-img-top {
+    height: 250px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.card-img-top img {
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.card-body h6 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.text-decoration-line-through {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.fw-bold {
+    font-size: 1.1rem;
+    color: #000;
+}
+
+a.text-decoration-none:hover {
+    text-decoration: none;
+}
+
+

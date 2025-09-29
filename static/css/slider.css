@@ -1,0 +1,13 @@
+.carousel-img {
+  width: 100vw;         /* Full viewport width */
+  height: 100vh;        /* Full viewport height */
+  object-fit: cover;    /* Scale and crop to cover the area */
+  display: block;
+}
+
+.carousel-item {
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
