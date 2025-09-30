@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure--t7725l4589%ytumkft%-lam1*cgra4bb+c^xzj%7ma3xe#121
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1', 'localhost']
+
 
 
 # Application definition
@@ -82,11 +83,11 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hiii' ,
-        'USER':'root',
-        'PASSWORD':'San@12345',
-        'HOST':'localhost',
-        'PORT':'3306'
+        'NAME': os.environ.get('DB_NAME', 'hiii'),
+        'USER': os.environ.get('DB_USER', 'root'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'San@12345'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '3306'),
     }
 }
 
@@ -133,6 +134,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
 # Media files (Uploaded images)
 MEDIA_URL = '/media/'
